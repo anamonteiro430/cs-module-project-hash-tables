@@ -34,10 +34,10 @@ class HashTable:
 
         Implement this.
         """
-        # Your code here
+        return len([None] * self.capacity) # or just self.capacity
 
 
-    def get_load_factor(self):
+    def get_load_factor(self):  #TODO
         """
         Return the load factor for this hash table.
 
@@ -46,7 +46,7 @@ class HashTable:
         # Your code here
 
 
-    def fnv1(self, key):
+    def fnv1(self, key):   # hashing function
         """
         FNV-1 Hash, 64-bit
 
@@ -62,7 +62,10 @@ class HashTable:
 
         Implement this, and/or FNV-1.
         """
-        # Your code here
+        hash = 5381
+        for x in key:
+            hash = (( hash << 5) + hash) + ord(x)
+        return hash & 0xFFFFFFFF
 
 
     def hash_index(self, key):
