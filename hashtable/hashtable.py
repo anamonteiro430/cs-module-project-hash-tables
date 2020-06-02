@@ -104,7 +104,7 @@ class HashTable:
 
         Implement this.
         """
-        put(key,None)
+        self.put(key,None)
 
 
 
@@ -115,11 +115,10 @@ class HashTable:
         """
         # this gives me an index within a range
 
-        slot = self.djb2(key) % self.get_num_slots()
-        if slot:
-            return self.data[slot]
-        else:
-            return None
+        slot = self.hash_index(key)
+        if self.data[slot]:
+            return self.data[slot].value
+        return None
 
     def resize(self, new_capacity):
         """
@@ -135,6 +134,7 @@ class HashTable:
 hs = HashTable(8)
 hs.put("kika", "value da kika")
 hs.put("keysssss", "vassslue")
+print(hs.get("kiksa"))
 print("HEREE")
 
 print(hs.data)
