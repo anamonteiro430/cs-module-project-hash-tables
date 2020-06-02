@@ -22,6 +22,7 @@ class HashTable:
 
     def __init__(self, capacity):
         self.capacity = MIN_CAPACITY
+        self.data = [None] * self.capacity
 
 
     def get_num_slots(self):
@@ -34,7 +35,7 @@ class HashTable:
 
         Implement this.
         """
-        return len([None] * self.capacity) # or just self.capacity
+        return len(self.data) # or just self.capacity
 
 
     def get_load_factor(self):  #TODO
@@ -56,16 +57,15 @@ class HashTable:
         # Your code here
 
 
-    def djb2(self, key):
-        """
-        DJB2 hash, 32-bit
-
-        Implement this, and/or FNV-1.
-        """
+    def djb2(self, key):   # takes the key and turns it into a slot number
         hash = 5381
-        for x in key:
-            hash = (( hash << 5) + hash) + ord(x)
-        return hash & 0xFFFFFFFF
+        byte_array = key.encode('utf-8')
+
+        for byte in byte_array:
+        # the modulus keeps it 32-bit, python integers don't overflow
+            hash = ((hash * 33) ^ byte) % 0x100000000
+
+        return hash
 
 
     def hash_index(self, key):
@@ -76,7 +76,7 @@ class HashTable:
         #return self.fnv1(key) % self.capacity
         return self.djb2(key) % self.capacity
 
-    def put(self, key, value):
+    def put(self, key, value): # key is a string
         """
         Store the value with the given key.
 
@@ -84,8 +84,10 @@ class HashTable:
 
         Implement this.
         """
-        # Your code here
-
+        # get slot
+        slot = self.djb2(key) % self.get_num_slots()
+        # store the value in that slot
+        self.data[slot] = value
 
     def delete(self, key):
         """
@@ -101,13 +103,15 @@ class HashTable:
     def get(self, key):
         """
         Retrieve the value stored with the given key.
-
         Returns None if the key is not found.
-
-        Implement this.
         """
-        # Your code here
-
+        # this gives me an index within a range
+        
+        slot = self.djb2(key) % self.get_num_slots()
+        if slot:
+            return self.data[slot]
+        else:
+            return None
 
     def resize(self, new_capacity):
         """
