@@ -7,6 +7,9 @@ class HashTableEntry:
         self.value = value
         self.next = None
 
+    def __repr__(self):
+             return f'HashTableEntry({repr(self.key)},{repr(self.value)})'
+
 
 # Hash table can't have fewer than this many slots
 MIN_CAPACITY = 8
@@ -35,7 +38,7 @@ class HashTable:
 
         Implement this.
         """
-        return len(self.data) # or just self.capacity
+        return self.capacity # or just self.capacity
 
 
     def get_load_factor(self):  #TODO
@@ -87,8 +90,11 @@ class HashTable:
         # get slot
         slot = self.hash_index(key)
         # store the value in that slot
-        self.data[slot] = value
-        return self.data[slot]
+        ''' self.data[slot] = value '''
+        # instead of just storing the value
+        # store both value and key
+        self.data[slot] = HashTableEntry(key, value)
+        
 
     def delete(self, key):
         """
@@ -127,12 +133,10 @@ class HashTable:
 
 
 hs = HashTable(8)
-put = hs.put("kika", "value da kika")
-get = hs.get("kika")
+hs.put("kika", "value da kika")
+hs.put("keysssss", "vassslue")
 print("HEREE")
-print(put)
-print(get)
-print("DATA")
+
 print(hs.data)
 
 if __name__ == "__main__":
