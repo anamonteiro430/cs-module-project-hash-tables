@@ -85,9 +85,10 @@ class HashTable:
         Implement this.
         """
         # get slot
-        slot = self.djb2(key) % self.get_num_slots()
+        slot = self.hash_index(key)
         # store the value in that slot
         self.data[slot] = value
+        return self.data[slot]
 
     def delete(self, key):
         """
@@ -97,7 +98,8 @@ class HashTable:
 
         Implement this.
         """
-        # Your code here
+        put(key,None)
+
 
 
     def get(self, key):
@@ -106,7 +108,7 @@ class HashTable:
         Returns None if the key is not found.
         """
         # this gives me an index within a range
-        
+
         slot = self.djb2(key) % self.get_num_slots()
         if slot:
             return self.data[slot]
@@ -123,6 +125,15 @@ class HashTable:
         # Your code here
 
 
+
+hs = HashTable(8)
+put = hs.put("kika", "value da kika")
+get = hs.get("kika")
+print("HEREE")
+print(put)
+print(get)
+print("DATA")
+print(hs.data)
 
 if __name__ == "__main__":
     ht = HashTable(8)
