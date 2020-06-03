@@ -83,7 +83,7 @@ class HashTable:
     def __init__(self, capacity):
         self.capacity = MIN_CAPACITY
         self.data = [None] * self.capacity
-        self.load = None
+        self.load = 0
 
     def get_num_slots(self):
         """
@@ -99,12 +99,13 @@ class HashTable:
 
     #is overloaded / underloaded
 
-    def get_load_factor(self):  #TODO
+    def get_load_factor(self):  #number of pairs / number of slots in the array (capacity)
         """
         Return the load factor for this hash table.
         """
+        load_factor = self.load / self.capacity
+        return load_factor
         
-
 
     def fnv1(self, key):   # hashing function
         """
@@ -160,21 +161,22 @@ class HashTable:
         new_entry = HashTableEntry(key, value)
         # if there's something there in that slot:
         if self.data[slot]:
-            """ #append to the head, update pointers
+            #append to the head, update pointers
             #My new entry NEXT pointer points to the "head of slot"/"first position"
             new_entry.next = self.data[slot]
             
             #In that first position put there my new entry, making it the "head" of that slot
-            self.data[slot] = new_entry """
-            print("!!!", self.data[slot])
-            #append to end
+            self.data[slot] = new_entry 
+            self.load += 1
+            """ #append to end
             self.data[slot].next = new_entry
-            print(" NEXTT!!!", self.data[slot].next)
+            print(" NEXTT!!!", self.data[slot].next) """
              
         # if slot is empty put there my new entry
         else:
             self.data[slot] = new_entry
-        
+            self.load += 1
+            
 
         ''' he = HashTableEntry(key, value)
         he.head = self.data[slot]
@@ -211,6 +213,7 @@ class HashTable:
         Implement this.
         """
         self.put(key,None)
+        self.load -= 1
 
 
     def get(self, key):
@@ -271,9 +274,10 @@ if __name__ == "__main__":
     
     ht.put("key-1", "val-1") #6
     ht.put("key-9", "val-9") #6
-    """  ht.get("key-1")
-    ht.get("key-9") """
-
+    ht.get("key-1")
+    ht.get("key-9")
+    ht.get_load_factor()
+    print("LF", ht.get_load_factor())
 
     print("DATA", ht.data)
     test = ht.data[6]
