@@ -1,3 +1,61 @@
+class Node:
+    def __init__(self, key, value):
+        self.key = key
+        self.value = value
+        self.next = None
+
+class LL:
+    def __init__(self):
+        #keep track of head
+        self.head = None
+
+    def __str__(self):
+        r = ""
+        cur = self.head
+
+        while cur is not None:
+            r += f'({cur.value})'
+            if cur.next is not None:
+                r += ' -> '
+
+            cur = cur.next
+
+        return r
+
+    def insert_at_head(self, node):
+        node.next = self.head
+        self.head = node
+    
+    def find(self, value):
+        current = self.head #keep copy of head
+        while current is not None: #traverse LL
+            if current.value == value:
+                return current
+            current = current.next
+        return None #not in the LL
+
+    def delete(self, value):
+        current = self.head
+        #if I'm deleting the head
+        if current.value == value:
+            self.head = self.head.next
+            return current
+        
+        #it's not the head
+        #traverse LL with both pointers
+        prev = current
+        current = current.next
+        
+        while current is not None:
+            if current.value == value:
+                prev.next = current.next
+                return current
+            else:   
+                prev = prev.next
+                current = current.next
+
+        return None
+            
 class HashTableEntry:
     """
     Linked List hash table key/value pair
@@ -6,6 +64,8 @@ class HashTableEntry:
         self.key = key
         self.value = value
         self.next = None
+        self.head = None
+
 
     def __repr__(self):
              return f'HashTableEntry({repr(self.key)},{repr(self.value)})'
@@ -19,14 +79,11 @@ class HashTable:
     """
     A hash table that with `capacity` buckets
     that accepts string keys
-
-    Implement this.
     """
-
     def __init__(self, capacity):
         self.capacity = MIN_CAPACITY
         self.data = [None] * self.capacity
-
+        self.load = None
 
     def get_num_slots(self):
         """
@@ -40,6 +97,7 @@ class HashTable:
         """
         return self.capacity # or just self.capacity
 
+    #is overloaded / underloaded
 
     def get_load_factor(self):  #TODO
         """
@@ -84,9 +142,7 @@ class HashTable:
         Store the value with the given key.
 
         Hash collisions should be handled with Linked List Chaining.
-
-        Implement this.
-        """
+        
         # get slot
         slot = self.hash_index(key)
         # store the value in that slot
@@ -94,7 +150,54 @@ class HashTable:
         # instead of just storing the value
         # store both value and key
         self.data[slot] = HashTableEntry(key, value)
+        """
+        #Using LL
+        #find slot for the key
+        """ slot = self.hash_index(key)
+        self.data[slot].insert_at_head(Node(key, value)) """
+
+        # get slot
+        slot = self.hash_index(key)
+        # new entry, instantiate HashTableEntry (like a node)  
+        new_entry = HashTableEntry(key, value)
+        # if there's something there in that slot:
+        if self.data[slot]:
+            #append to the head, update pointers
+            #My new entry NEXT pointer points to the "head of slot"/"first position"
+            new_entry.next = self.data[slot]
+            
+            #In that first position put there my new entry, making it the "head" of that slot
+            self.data[slot] = new_entry
+             
+        # if slot is empty put there my new entry
+        self.data[slot] = new_entry
         
+
+        ''' he = HashTableEntry(key, value)
+        he.head = self.data[slot]
+        #search LL for the key [0, 1, 2]
+        if he.head:
+            print("ll")
+            print("HEAD", head)
+            if he.head.key == key: #if it's the same key, update value
+                head.value = value
+                return
+            #key doesn't exist but slot is occupied
+            #new's next is the head 
+            he.next = head
+            #the old head points to the new node
+            head = he
+            print(head.next)
+            print("NEWHEAD", head)
+            print("OUT")
+            return head
+        else:
+            self.data[slot] = he '''
+
+        #if found, update it
+        #if not found, make a new HashTableEntry
+        #and add it to the list
+
 
     def delete(self, key):
         """
@@ -104,8 +207,7 @@ class HashTable:
 
         Implement this.
         """
-        self.put(key,None)
-
+        ''' self.put(key,None) '''
 
 
     def get(self, key):
@@ -114,11 +216,39 @@ class HashTable:
         Returns None if the key is not found.
         """
         # this gives me an index within a range
-
         slot = self.hash_index(key)
+        current = self.data[slot]
+        print("SLOT", slot)
+        print("HEAD", current)
+        # walk the linked list in that slot
+        while current is not None:
+            print("ENTER LOOP")
+            print("KEY", key)
+            print("current key", current.key)
+            if current.key == key:
+                print("!", current.value)
+                return current.value
+            current = current.next
+        
+
+        """ slot = self.hash_index(key)
         if self.data[slot]:
             return self.data[slot].value
-        return None
+        return None """
+
+        """ slot = self.hash_index(key)
+        current = self.data[slot]
+        print("CURRENT", current)
+
+        if current:
+            while current:
+                if current == key:
+                    return current.value
+                current = current.next
+            
+            
+        return None """
+      
 
     def resize(self, new_capacity):
         """
@@ -127,35 +257,32 @@ class HashTable:
 
         Implement this.
         """
-        # Your code here
+        # Keep track of capacity and load factor
+        # if its overloaded, resize it
+        # By changing the capacity 
 
-
-
-hs = HashTable(8)
-hs.put("kika", "value da kika")
-hs.put("keysssss", "vassslue")
-print(hs.get("kiksa"))
-print("HEREE")
-
-print(hs.data)
 
 if __name__ == "__main__":
     ht = HashTable(8)
 
-    ht.put("line_1", "'Twas brillig, and the slithy toves")
-    ht.put("line_2", "Did gyre and gimble in the wabe:")
-    ht.put("line_3", "All mimsy were the borogoves,")
-    ht.put("line_4", "And the mome raths outgrabe.")
-    ht.put("line_5", '"Beware the Jabberwock, my son!')
-    ht.put("line_6", "The jaws that bite, the claws that catch!")
-    ht.put("line_7", "Beware the Jubjub bird, and shun")
-    ht.put("line_8", 'The frumious Bandersnatch!"')
-    ht.put("line_9", "He took his vorpal sword in hand;")
-    ht.put("line_10", "Long time the manxome foe he sought--")
-    ht.put("line_11", "So rested he by the Tumtum tree")
-    ht.put("line_12", "And stood awhile in thought.")
+    
+    ht.put("key-1", "val-1") #6
+    ht.put("key-9", "val-9") #6
+    ht.get("key-1")
+    ht.get("key-9")
 
-    print("")
+
+    """ print("DATA", ht.data)
+    test = ht.data[6]
+
+    while test:
+        print("TEST", test.key)
+        test = test.next  """
+
+    ''' print("")
+
+
+    
 
     # Test storing beyond capacity
     for i in range(1, 13):
@@ -172,4 +299,4 @@ if __name__ == "__main__":
     for i in range(1, 13):
         print(ht.get(f"line_{i}"))
 
-    print("")
+    print("") '''
