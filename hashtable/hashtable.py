@@ -102,10 +102,8 @@ class HashTable:
     def get_load_factor(self):  #TODO
         """
         Return the load factor for this hash table.
-
-        Implement this.
         """
-        # Your code here
+        
 
 
     def fnv1(self, key):   # hashing function
@@ -162,15 +160,20 @@ class HashTable:
         new_entry = HashTableEntry(key, value)
         # if there's something there in that slot:
         if self.data[slot]:
-            #append to the head, update pointers
+            """ #append to the head, update pointers
             #My new entry NEXT pointer points to the "head of slot"/"first position"
             new_entry.next = self.data[slot]
             
             #In that first position put there my new entry, making it the "head" of that slot
-            self.data[slot] = new_entry
+            self.data[slot] = new_entry """
+            print("!!!", self.data[slot])
+            #append to end
+            self.data[slot].next = new_entry
+            print(" NEXTT!!!", self.data[slot].next)
              
         # if slot is empty put there my new entry
-        self.data[slot] = new_entry
+        else:
+            self.data[slot] = new_entry
         
 
         ''' he = HashTableEntry(key, value)
@@ -268,16 +271,16 @@ if __name__ == "__main__":
     
     ht.put("key-1", "val-1") #6
     ht.put("key-9", "val-9") #6
-    ht.get("key-1")
-    ht.get("key-9")
+    """  ht.get("key-1")
+    ht.get("key-9") """
 
 
-    """ print("DATA", ht.data)
+    print("DATA", ht.data)
     test = ht.data[6]
 
     while test:
         print("TEST", test.key)
-        test = test.next  """
+        test = test.next  
 
     ''' print("")
 
