@@ -207,7 +207,7 @@ class HashTable:
 
         Implement this.
         """
-        ''' self.put(key,None) '''
+        self.put(key,None)
 
 
     def get(self, key):
@@ -229,7 +229,7 @@ class HashTable:
                 print("!", current.value)
                 return current.value
             current = current.next
-        
+        return None
 
         """ slot = self.hash_index(key)
         if self.data[slot]:
