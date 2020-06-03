@@ -95,7 +95,7 @@ class HashTable:
 
         Implement this.
         """
-        return self.capacity # or just self.capacity
+        return len(self.data) # or just self.capacity
 
     #is overloaded / underloaded
 
@@ -103,7 +103,7 @@ class HashTable:
         """
         Return the load factor for this hash table.
         """
-        load_factor = self.load / self.capacity
+        load_factor = self.load / len(self.data)
         return load_factor
         
 
@@ -224,15 +224,12 @@ class HashTable:
         # this gives me an index within a range
         slot = self.hash_index(key)
         current = self.data[slot]
-        print("SLOT", slot)
-        print("HEAD", current)
+        
         # walk the linked list in that slot
         while current is not None:
-            print("ENTER LOOP")
-            print("KEY", key)
-            print("current key", current.key)
+           
             if current.key == key:
-                print("!", current.value)
+                
                 return current.value
             current = current.next
         return None
@@ -262,8 +259,48 @@ class HashTable:
         rehashes all key/value pairs.
 
         Implement this.
-        """
+        
+        create a copy of old storage
+        update the self.capacity to the new capacity
+        overwrite old storage based of the new self.capacity
+        for each item of the old storage insert in the new storage using the self.put method
+        if it's a LL traverse it and insert with put method
+    
+        """ 
+        """ print("DATA FIRST", self.data) """
         # Keep track of capacity and load factor
+        if self.get_load_factor() >= 0.7:
+            #copy of old list
+            old_list = self.data
+            #updating storage
+            self.capacity = new_capacity
+            self.data = [None] * self.capacity
+            """ print("THE CAPACITY NOW IS", self.capacity)
+            print("DATA HERe", self.data) """
+            #iterate through range of the list
+            for i in range(len(old_list)): # i 0-7
+                current = old_list[i]
+                
+                while current:
+                    print("CURRENT", current)
+                    new_slot = self.hash_index(current.key)
+                    print("SLOTT", new_slot)
+                    print("!!!!", self.data[new_slot])
+                    if self.data[new_slot] is None:
+                        self.data[new_slot] = (HashTableEntry(current.key, current.value))
+                        print("IFDATA HERe", self.data)
+                        print("!!!!", self.data[new_slot])
+                        current = current.next
+                    
+                    else:
+                        self.data[i].next = self.data[i]
+                        print("ELSEDATA HERe", self.data)
+
+
+            
+
+        else:
+            print("underloaded")
         # if its overloaded, resize it
         # By changing the capacity 
 
@@ -271,20 +308,26 @@ class HashTable:
 if __name__ == "__main__":
     ht = HashTable(8)
 
+    ht.put("key-0", "val-0")
+    ht.put("key-1", "val-1")
+    ht.put("key-2", "val-2")
+    ht.put("key-3", "val-3")
+    ht.put("key-4", "val-4")
+    ht.put("key-5", "val-5")
+    ht.put("key-6", "val-6")
+    ht.put("key-7", "val-7")
+    ht.put("key-8", "val-8")
+    ht.put("key-9", "val-9")
     
-    ht.put("key-1", "val-1") #6
-    ht.put("key-9", "val-9") #6
-    ht.get("key-1")
-    ht.get("key-9")
-    ht.get_load_factor()
-    print("LF", ht.get_load_factor())
-
+    
+    print("RESIZE", ht.resize(16))
     print("DATA", ht.data)
-    test = ht.data[6]
+
+    """ test = ht.data[0] 
 
     while test:
         print("TEST", test.key)
-        test = test.next  
+        test = test.next  """
 
     ''' print("")
 
