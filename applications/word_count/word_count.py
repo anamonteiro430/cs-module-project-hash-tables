@@ -1,5 +1,22 @@
+import re
+
+
 def word_count(s):
-    # Your code here
+    cache={}
+
+    s = s.lower()
+    print(s)
+    s_list = re.findall(r"[\w']+|[ª]", s)
+    print("SLIST", s_list)
+    for word in s_list:
+        if word in cache:
+            cache[word] += 1
+        else:
+            cache[word] = 1
+    items = list(cache.items())
+    print(items) 
+    return cache
+
 
 
 
